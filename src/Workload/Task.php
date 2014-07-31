@@ -1,60 +1,74 @@
 <?php
 namespace Pipeline\Workload;
 
-class Task
+class Task implements \JsonSerializable
 {
-    private $label;
-    private $done = false;
-    private $failed = false;
-    private $errors = array();
-    private $metadata = array();
+    private $task = array(
+        'label' => '',
+        'done' => false,
+        'failed' => false,
+        'errors' => array(),
+        'metadata' => array()
+    );
 
     public function __construct($label, array $meta = array())
     {
-        $this->label = $label;
-        $this->metadata = $meta;
+        $this->task['label'] = $label;
+        $this->task['metadata'] = $meta;
     }
 
     public function getLabel()
     {
-        return $this->label;
+        return $this->task['label'];
     }
 
     public function setDone()
     {
-        $this->done = true;
+        $this->task['done'] = true;
     }
 
     public function isDone()
     {
-        return $this->done;
+        return $this->task['done'];
     }
 
     public function setFailed($msg = null)
     {
-        $this->failed = true;
+        $this->task['failed'] = true;
         if ($msg) {
-            $this->errors[] = $msg;
+            $this->task['errors'][] = $msg;
         }
     }
 
     public function isFailed()
     {
-        return $this->failed;
+        return $this->task['failed'];
     }
 
     public function getErrors()
     {
-        return $this->errors;
+        return $this->task['errors'];
     }
 
     public function setMeta($name, $value)
     {
-        $this->metadata[$name] = $value;
+        $this->task['metadata'][$name] = $value;
     }
 
     public function getMeta($name)
     {
-        return isset($this->metadata[$name]) ? $this->metadata[$name] : null;
+        return isset($this->task['metadata'][$name]) ? $this->task['metadata'][$name] : null;
+    }
+
+    /**
+     * (PHP 5 &gt;= 5.4.0)<br/>
+     * Specify data which should be serialized to JSON
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     */
+    public function jsonSerialize()
+    {
+        return $this->task;
     }
 }
