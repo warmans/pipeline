@@ -1,0 +1,23 @@
+{
+    "name": "warmans/pipeline",
+    "description": "framework for creating task pipelines",
+    "require-dev": {
+        "phpunit/phpunit": "~4.1.0",
+        "squizlabs/php_codesniffer": "1.*"
+    },
+    "authors": [
+        {
+            "name": "swarman",
+            "email": "stefan.warman@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+
+    },
+    "autoload": {
+        "psr-4": {
+            "Pipeline\\": "src/"
+        }
+    }
+}
