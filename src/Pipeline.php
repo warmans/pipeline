@@ -4,10 +4,24 @@ namespace Pipeline;
 use Pipeline\Stage\StageInterface;
 use Pipeline\Workload\Task;
 
+/**
+ * A pipeline takes a workload and passes each workload task through a series of stages. Each task has a context
+ * instance which is shared between stages (but not tasks) allowing communication with later stages. The initial
+ * context given at execute is cloned for each task so you can share
+ *
+ * @package Pipeline
+ */
 class Pipeline
 {
+    /**
+     * @var array
+     */
     private $stages = array();
 
+    /**
+     * @param StageInterface $stage
+     * @throws \RuntimeException
+     */
     public function addStage(StageInterface $stage)
     {
         if (array_key_exists($stage->getName(), $this->stages)) {
@@ -16,11 +30,18 @@ class Pipeline
         $this->stages[$stage->getName()] = $stage;
     }
 
+    /**
+     * @return array
+     */
     public function getStages()
     {
         return $this->stages;
     }
 
+    /**
+     * @param Workload $workload
+     * @param Context $context
+     */
     public function execute(Workload $workload, Context $context)
     {
         foreach($workload->getTasks() as $task) {
@@ -37,6 +58,11 @@ class Pipeline
         }
     }
 
+    /**
+     * @param Task $task
+     * @param Context $context
+     * @return bool
+     */
     protected function executeStages(Task $task, Context $context)
     {
         foreach ($this->getStages() as $name => $stage) {

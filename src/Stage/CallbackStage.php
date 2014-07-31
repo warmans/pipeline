@@ -4,6 +4,11 @@ namespace Pipeline\Stage;
 use Pipeline\Context;
 use Pipeline\Workload\Task;
 
+/**
+ * Stage which allows a pipeline to be implemented using Closures instead of class instances.
+ *
+ * @package Pipeline\Stage
+ */
 class CallbackStage implements StageInterface
 {
     private $name;
