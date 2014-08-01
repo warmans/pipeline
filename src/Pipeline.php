@@ -85,13 +85,13 @@ class Pipeline
 
             //check if task has completed prematurely
             if ($task->isDone()) {
-                $context->log('pipeline completed prematurely');
+                $context->log('pipeline ended as task is done');
                 return true;
             }
 
             //task has failed
             if ($task->isFailed()) {
-                $context->log('pipeline aborted due to failed task');
+                $context->log('pipeline aborted as task failed');
                 return false;
             }
         }
