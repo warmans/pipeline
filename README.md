@@ -1,6 +1,7 @@
 pipeline
 ========
 
+[![Build Status](https://travis-ci.org/warmans/pipeline.svg?branch=master)](https://travis-ci.org/warmans/pipeline)
 [![Code Coverage](https://scrutinizer-ci.com/g/warmans/pipeline/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/warmans/pipeline/?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/warmans/pipeline/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/warmans/pipeline/?branch=master)
 
