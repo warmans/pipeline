@@ -1,6 +1,9 @@
 pipeline
 ========
 
+[![Code Coverage](https://scrutinizer-ci.com/g/warmans/pipeline/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/warmans/pipeline/?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/warmans/pipeline/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/warmans/pipeline/?branch=master)
+
 Create a task pipline for seperating complex operations into smaller testable units.
 
 Sample useage:
