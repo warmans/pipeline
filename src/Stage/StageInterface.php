@@ -29,4 +29,4 @@ interface StageInterface
      * @return bool|null
      */
     public function execute(Task $task, Context $context);
-} 
+}

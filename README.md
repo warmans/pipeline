@@ -1,7 +1,7 @@
 pipeline
 ========
 
-Create a task pipline for seperating complex operations into smaller testable units
+Create a task pipline for seperating complex operations into smaller testable units.
 
 Sample useage:
 
@@ -28,8 +28,14 @@ $pipeline->addStage(new CallbackStage('second-stage', function (Task $task) {
     $task->setMeta('done-second', true);
 }));
 
+//setup the context to enable logging
+$context = new Context();
+$context->setLogger(function($msg, $writeLn=true) {
+    echo $msg . ($writeLn ? "\n" : "");
+});
+
 //execute
-$pipeline->execute($workload, new Context());
+$pipeline->execute($workload, $context);
 
 var_dump($workload);
 ```

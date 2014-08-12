@@ -2,8 +2,7 @@
 namespace Pipeline;
 
 /**
- * A workload is just a container for tasks. The pipeline requires a workload and will run each task though
- * applicable stages.
+ * A workload is just a container for tasks. Tasks are the "things" that pass though a pipeline in series.
  *
  * @package Pipeline
  */

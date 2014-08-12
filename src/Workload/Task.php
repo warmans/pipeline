@@ -1,12 +1,20 @@
 <?php
 namespace Pipeline\Workload;
 
+/**
+ * Tasks don't do anything they just describe some task that must be performed in stages.
+ *
+ * @package Pipeline\Workload
+ */
 class Task implements \JsonSerializable
 {
+    const STATUS_DONE = 1;
+    const STATUS_FAILED = -1;
+    const STATUS_UNKNOWN = 0;
+
     private $task = array(
         'label' => '',
-        'done' => false,
-        'failed' => false,
+        'status' => self::STATUS_UNKNOWN,
         'errors' => array(),
         'metadata' => array()
     );
@@ -31,7 +39,7 @@ class Task implements \JsonSerializable
 
     public function setDone()
     {
-        $this->task['done'] = true;
+        $this->task['status'] = self::STATUS_DONE;
     }
 
     /**
@@ -39,7 +47,7 @@ class Task implements \JsonSerializable
      */
     public function isDone()
     {
-        return $this->task['done'];
+        return $this->task['status'] === self::STATUS_DONE;
     }
 
     /**
@@ -47,7 +55,7 @@ class Task implements \JsonSerializable
      */
     public function setFailed($msg = null)
     {
-        $this->task['failed'] = true;
+        $this->task['status'] = self::STATUS_FAILED;
         if ($msg) {
             $this->task['errors'][] = $msg;
         }
@@ -58,7 +66,7 @@ class Task implements \JsonSerializable
      */
     public function isFailed()
     {
-        return $this->task['failed'];
+        return $this->task['status'] === self::STATUS_FAILED;
     }
 
     /**

@@ -5,9 +5,10 @@ use Pipeline\Stage\StageInterface;
 use Pipeline\Workload\Task;
 
 /**
- * A pipeline takes a workload and passes each workload task through a series of stages. Each task has a context
+ * A pipeline takes a workload and passes each task through a series of stages. Each task has a context
  * instance which is shared between stages (but not tasks) allowing communication with later stages. The initial
- * context given at execute is cloned for each task so you can share
+ * context instance given to execute is cloned for each task so you can share information between tasks using this
+ * shared context.
  *
  * @package Pipeline
  */

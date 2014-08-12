@@ -1,10 +1,30 @@
 <?php
 namespace Pipeline;
 
+/**
+ * A context instance is passed between tasks allowing communication with later tasks. For example one task could
+ * download a file and store it's location in the context then a later task could process the file.
+ * The context can also be assigned a logger closure which allows you to delegate messages back to some applicable
+ * handler e.g. Symfony Console Output in the case of a CLI application.
+ *
+ *
+ * @package Pipeline
+ */
 class Context
 {
+    /**
+     * @var \Closure
+     */
     private $logger;
+
+    /**
+     * @var array
+     */
     private $data = array();
+
+    /**
+     * @var array
+     */
     private $logPrefixes = array();
 
     public function __construct()
@@ -15,7 +35,7 @@ class Context
     }
 
     /**
-     * Supply an applicable logger from the outer context
+     * Supply a logger from the calling scope e.g. STDOUT logger form console application.
      *
      * @param callable $logger
      */
