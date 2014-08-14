@@ -45,6 +45,7 @@ class Pipeline
      */
     public function execute(Workload $workload, Context $context)
     {
+        $failed = 0;
         foreach($workload->getTasks() as $task) {
             //each task executes in a context
             $taskContext = clone $context;
@@ -55,8 +56,14 @@ class Pipeline
             $result = $this->executeStages($task, $taskContext);
             $taskContext->popPrefix();
 
+            if ($result === false) {
+                $failed++;
+            }
+
             $taskContext->log((false === $result) ? 'FAILED' : 'COMPLETED');
         }
+
+        return ($failed > 0) ? false : true;
     }
 
     /**

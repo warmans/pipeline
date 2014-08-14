@@ -149,4 +149,53 @@ class PipelineTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(1, $stagesExecuted);
         $this->assertEquals('first-stage', $stagesExecuted[0]);
     }
+
+    public function testExecuteReturnsTrueOnAllOk()
+    {
+        //setup single task
+        $workload = new Workload();
+        $workload->addTask(new Workload\Task('foo'));
+
+        //setup two stages
+        $this->object->addStage(new CallbackStage('first-stage', function (Workload\Task $task) {
+            return true;
+        }));
+
+        $result = $this->object->execute($workload, new Context());
+        $this->assertTrue($result);
+    }
+
+    public function testExecuteReturnsFalseOnAllFail()
+    {
+        //setup single task
+        $workload = new Workload();
+        $workload->addTask(new Workload\Task('foo'));
+
+        //setup two stages
+        $this->object->addStage(new CallbackStage('first-stage', function (Workload\Task $task) {
+            $task->setFailed();
+        }));
+
+        $result = $this->object->execute($workload, new Context());
+        $this->assertFalse($result);
+    }
+
+    public function testExecuteReturnsFalseOnSingleFail()
+    {
+        //setup single task
+        $workload = new Workload();
+        $workload->addTask(new Workload\Task('foo'));
+
+        //setup two stages
+        $this->object->addStage(new CallbackStage('first-stage', function (Workload\Task $task) {
+            return true;
+        }));
+
+        $this->object->addStage(new CallbackStage('second-stage', function (Workload\Task $task) {
+            $task->setFailed();
+        }));
+
+        $result = $this->object->execute($workload, new Context());
+        $this->assertFalse($result);
+    }
 }
