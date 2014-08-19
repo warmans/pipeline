@@ -1,6 +1,7 @@
 <?php
 namespace Pipeline;
 
+use Pipeline\PrePost\PrePostInterface;
 use Pipeline\Stage\StageInterface;
 use Pipeline\Workload\Task;
 
@@ -32,19 +33,17 @@ class Pipeline
     /**
      * All setup logic is invoked ONCE before a pipeline is executed.
      *
-     * @param callable $setup
+     * @param PrePost\PrePostInterface $setup
      */
-    public function addSetup(\Closure $setup)
+    public function addSetup(PrePostInterface $setup)
     {
         $this->setup[] = $setup;
     }
 
     /**
      * All teardown logic is invoked ONCE after a pipeline has executed.
-     *
-     * @param callable $teardown
      */
-    public function addTeardown(\Closure $teardown)
+    public function addTeardown(PrePostInterface $teardown)
     {
         $this->teardown[] = $teardown;
     }
@@ -77,7 +76,7 @@ class Pipeline
     public function execute(Workload $workload, Context $context)
     {
         foreach($this->setup as $setup) {
-            $setup($workload, $context);
+            $setup->execute($workload, $context);
         }
 
         $failed = 0;
@@ -99,7 +98,7 @@ class Pipeline
         }
 
         foreach($this->teardown as $teardown) {
-            $teardown($workload, $context);
+            $teardown->execute($workload, $context);
         }
 
         return ($failed > 0) ? false : true;

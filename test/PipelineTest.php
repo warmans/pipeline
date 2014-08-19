@@ -1,6 +1,7 @@
 <?php
 namespace Pipeline;
 
+use Pipeline\PrePost\PrePostCallback;
 use Pipeline\Stage\CallbackStage;
 
 class PipelineTest extends \PHPUnit_Framework_TestCase
@@ -214,9 +215,9 @@ class PipelineTest extends \PHPUnit_Framework_TestCase
         }));
 
         $called = 0;
-        $this->object->addSetup(function($workload, $context) use (&$called) {
+        $this->object->addSetup(new PrePostCallback('first', function($workload, $context) use (&$called) {
             $called++;
-        });
+        }));
 
         $this->object->execute($workload, new Context());
 
@@ -227,13 +228,13 @@ class PipelineTest extends \PHPUnit_Framework_TestCase
     public function testMultipleSetupsCalled()
     {
         $called = 0;
-        $this->object->addSetup(function($workload, $context) use (&$called) {
+        $this->object->addSetup(new PrePostCallback('first', function($workload, $context) use (&$called) {
             $called++;
-        });
+        }));
 
-        $this->object->addSetup(function($workload, $context) use (&$called) {
+        $this->object->addSetup(new PrePostCallback('second', function($workload, $context) use (&$called) {
             $called++;
-        });
+        }));
 
         $this->object->execute(new Workload(), new Context());
 
@@ -243,18 +244,18 @@ class PipelineTest extends \PHPUnit_Framework_TestCase
     public function testWorkloadPassedToSetup()
     {
         $me = $this;
-        $this->object->addSetup(function($workload, $context) use ($me) {
+        $this->object->addSetup(new PrePostCallback('first', function($workload, $context) use ($me) {
             $me->assertTrue($workload instanceof Workload);
-        });
+        }));
         $this->object->execute(new Workload(), new Context());
     }
 
     public function testContextPassedToSetup()
     {
         $me = $this;
-        $this->object->addSetup(function($workload, $context) use ($me) {
+        $this->object->addSetup(new PrePostCallback('first', function($workload, $context) use ($me) {
             $me->assertTrue($context instanceof Context);
-        });
+        }));
         $this->object->execute(new Workload(), new Context());
     }
 
@@ -273,9 +274,9 @@ class PipelineTest extends \PHPUnit_Framework_TestCase
             }));
 
         $called = 0;
-        $this->object->addTeardown(function($workload, $context) use (&$called) {
-                $called++;
-            });
+        $this->object->addTeardown(new PrePostCallback('first', function($workload, $context) use (&$called) {
+            $called++;
+        }));
 
         $this->object->execute($workload, new Context());
 
@@ -286,13 +287,13 @@ class PipelineTest extends \PHPUnit_Framework_TestCase
     public function testMultipleTeardownsCalled()
     {
         $called = 0;
-        $this->object->addTeardown(function($workload, $context) use (&$called) {
+        $this->object->addTeardown(new PrePostCallback('first', function($workload, $context) use (&$called) {
             $called++;
-        });
+        }));
 
-        $this->object->addTeardown(function($workload, $context) use (&$called) {
+        $this->object->addTeardown(new PrePostCallback('second', function($workload, $context) use (&$called) {
             $called++;
-        });
+        }));
 
         $this->object->execute(new Workload(), new Context());
 
@@ -302,18 +303,18 @@ class PipelineTest extends \PHPUnit_Framework_TestCase
     public function testWorkloadPassedToTeardown()
     {
         $me = $this;
-        $this->object->addTeardown(function($workload, $context) use ($me) {
+        $this->object->addTeardown(new PrePostCallback('first', function($workload, $context) use ($me) {
             $me->assertTrue($workload instanceof Workload);
-        });
+        }));
         $this->object->execute(new Workload(), new Context());
     }
 
     public function testContextPassedToTeardown()
     {
         $me = $this;
-        $this->object->addTeardown(function($workload, $context) use ($me) {
+        $this->object->addTeardown(new PrePostCallback('first', function($workload, $context) use ($me) {
             $me->assertTrue($context instanceof Context);
-        });
+        }));
         $this->object->execute(new Workload(), new Context());
     }
 }
