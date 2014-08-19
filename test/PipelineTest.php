@@ -198,4 +198,122 @@ class PipelineTest extends \PHPUnit_Framework_TestCase
         $result = $this->object->execute($workload, new Context());
         $this->assertFalse($result);
     }
+
+    public function testSetupCalledOnceForAllStagesAndTasks()
+    {
+        $workload = new Workload();
+        $workload->addTask(new Workload\Task('foo'));
+        $workload->addTask(new Workload\Task('bar'));
+
+        $this->object->addStage(new CallbackStage('first-stage', function (Workload\Task $task) {
+            return true;
+        }));
+
+        $this->object->addStage(new CallbackStage('second-stage', function (Workload\Task $task) {
+            return true;
+        }));
+
+        $called = 0;
+        $this->object->addSetup(function($workload, $context) use (&$called) {
+            $called++;
+        });
+
+        $this->object->execute($workload, new Context());
+
+        $this->assertEquals(1, $called);
+
+    }
+
+    public function testMultipleSetupsCalled()
+    {
+        $called = 0;
+        $this->object->addSetup(function($workload, $context) use (&$called) {
+            $called++;
+        });
+
+        $this->object->addSetup(function($workload, $context) use (&$called) {
+            $called++;
+        });
+
+        $this->object->execute(new Workload(), new Context());
+
+        $this->assertEquals(2, $called);
+    }
+
+    public function testWorkloadPassedToSetup()
+    {
+        $me = $this;
+        $this->object->addSetup(function($workload, $context) use ($me) {
+            $me->assertTrue($workload instanceof Workload);
+        });
+        $this->object->execute(new Workload(), new Context());
+    }
+
+    public function testContextPassedToSetup()
+    {
+        $me = $this;
+        $this->object->addSetup(function($workload, $context) use ($me) {
+            $me->assertTrue($context instanceof Context);
+        });
+        $this->object->execute(new Workload(), new Context());
+    }
+
+    public function testTeardownCalledOnceForAllStagesAndTasks()
+    {
+        $workload = new Workload();
+        $workload->addTask(new Workload\Task('foo'));
+        $workload->addTask(new Workload\Task('bar'));
+
+        $this->object->addStage(new CallbackStage('first-stage', function (Workload\Task $task) {
+                return true;
+            }));
+
+        $this->object->addStage(new CallbackStage('second-stage', function (Workload\Task $task) {
+                return true;
+            }));
+
+        $called = 0;
+        $this->object->addTeardown(function($workload, $context) use (&$called) {
+                $called++;
+            });
+
+        $this->object->execute($workload, new Context());
+
+        $this->assertEquals(1, $called);
+
+    }
+
+    public function testMultipleTeardownsCalled()
+    {
+        $called = 0;
+        $this->object->addTeardown(function($workload, $context) use (&$called) {
+            $called++;
+        });
+
+        $this->object->addTeardown(function($workload, $context) use (&$called) {
+            $called++;
+        });
+
+        $this->object->execute(new Workload(), new Context());
+
+        $this->assertEquals(2, $called);
+    }
+
+    public function testWorkloadPassedToTeardown()
+    {
+        $me = $this;
+        $this->object->addTeardown(function($workload, $context) use ($me) {
+            $me->assertTrue($workload instanceof Workload);
+        });
+        $this->object->execute(new Workload(), new Context());
+    }
+
+    public function testContextPassedToTeardown()
+    {
+        $me = $this;
+        $this->object->addTeardown(function($workload, $context) use ($me) {
+            $me->assertTrue($context instanceof Context);
+        });
+        $this->object->execute(new Workload(), new Context());
+    }
 }

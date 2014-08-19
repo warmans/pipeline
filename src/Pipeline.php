@@ -20,6 +20,36 @@ class Pipeline
     private $stages = array();
 
     /**
+     * @var array
+     */
+    private $setup = array();
+
+    /**
+     * @var array
+     */
+    private $teardown = array();
+
+    /**
+     * All setup logic is invoked ONCE before a pipeline is executed.
+     *
+     * @param callable $setup
+     */
+    public function addSetup(\Closure $setup)
+    {
+        $this->setup[] = $setup;
+    }
+
+    /**
+     * All teardown logic is invoked ONCE after a pipeline has executed.
+     *
+     * @param callable $teardown
+     */
+    public function addTeardown(\Closure $teardown)
+    {
+        $this->teardown[] = $teardown;
+    }
+
+    /**
      * @param StageInterface $stage
      * @throws \RuntimeException
      */
@@ -42,9 +72,14 @@ class Pipeline
     /**
      * @param Workload $workload
      * @param Context $context
+     * @return bool
      */
     public function execute(Workload $workload, Context $context)
     {
+        foreach($this->setup as $setup) {
+            $setup($workload, $context);
+        }
+
         $failed = 0;
         foreach($workload->getTasks() as $task) {
             //each task executes in a context
@@ -61,6 +96,10 @@ class Pipeline
             }
 
             $taskContext->log((false === $result) ? 'FAILED' : 'COMPLETED');
+        }
+
+        foreach($this->teardown as $teardown) {
+            $teardown($workload, $context);
         }
 
         return ($failed > 0) ? false : true;
