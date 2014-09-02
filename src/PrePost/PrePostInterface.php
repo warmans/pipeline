@@ -24,5 +24,5 @@ interface PrePostInterface
      * @param Context $context
      * @return mixed
      */
-    public function execute(Workload $task, Context $context);
+    public function execute(Workload $workload, Context $context);
 }
