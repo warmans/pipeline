@@ -2,7 +2,6 @@
 namespace Pipeline\PrePost;
 
 use Pipeline\Context;
-use Pipeline\Workload\Task;
 use Pipeline\Workload;
 
 /**

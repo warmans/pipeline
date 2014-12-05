@@ -37,7 +37,7 @@ class Context
     /**
      * Supply a logger from the calling scope e.g. STDOUT logger form console application.
      *
-     * @param callable $logger
+     * @param \Closure $logger
      */
     public function setLogger(\Closure $logger)
     {
@@ -47,7 +47,7 @@ class Context
     /**
      * Push a prefix onto the top of the prefix stack
      *
-     * @param $prefix
+     * @param string $prefix
      */
     public function pushPrefix($prefix)
     {
