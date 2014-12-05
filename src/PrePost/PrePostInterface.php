@@ -20,7 +20,6 @@ interface PrePostInterface
     public function getName();
 
     /**
-     * @param Workload $task
      * @param Context $context
      * @return mixed
      */
